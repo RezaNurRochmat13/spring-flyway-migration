@@ -1,6 +1,7 @@
 package com.database.migration.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -20,4 +21,9 @@ public class Product implements Serializable {
 
     @Column(name = "qty")
     private String price;
+
+    public Product(String name, String price) {
+        this.name = name;
+        this.price = price;
+    }
 }
