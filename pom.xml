@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.database</groupId>
 	<artifactId>migration</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>migration</name>
 	<description>Migration project for Spring Boot</description>
 	<properties>

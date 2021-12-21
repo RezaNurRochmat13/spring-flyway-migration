@@ -1,7 +1,7 @@
 package com.database.migration.entity;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Table(name = "products")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +20,15 @@ public class Product implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "qty")
+    @Column(name = "price")
     private String price;
 
-    public Product(String name, String price) {
+    @Column(name = "qty")
+    private Integer qty;
+
+    public Product(String name, String price, Integer qty) {
         this.name = name;
         this.price = price;
+        this.qty = qty;
     }
 }
