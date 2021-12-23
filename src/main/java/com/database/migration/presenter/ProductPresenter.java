@@ -17,7 +17,7 @@ public class ProductPresenter {
     @Autowired
     private ProductServiceImpl productService;
 
-    @GetMapping("/products")
+    @GetMapping(value = "/products", produces = "application/json")
     public Map<String, Object> allProducts() {
         Map<String, Object> map = new HashMap<>();
         List<Product> productList = productService.findAllProducts();
