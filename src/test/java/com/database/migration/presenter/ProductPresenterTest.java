@@ -1,24 +1,26 @@
 package com.database.migration.presenter;
 
-import com.database.migration.entity.Product;
 import com.database.migration.repository.ProductRepository;
 import com.database.migration.service.ProductServiceImpl;
+import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,6 +34,9 @@ public class ProductPresenterTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private Flyway flyway;
+
     @MockBean
     private ProductServiceImpl productService;
 
@@ -40,12 +45,7 @@ public class ProductPresenterTest {
 
     @Before
     public void setUp() {
-        List<Product> productList = Arrays.asList(
-                new Product("Sariwangi", "2000", 2),
-                new Product("Indomilk", "3000", 3)
-        );
-
-        productRepository.saveAll(productList);
+        flyway.migrate();
     }
 
 
@@ -62,5 +62,8 @@ public class ProductPresenterTest {
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
         assertEquals(String.valueOf(MediaType.APPLICATION_JSON), response.getResponse().getContentType());
+//        assertEquals(2, response.getResponse().getContentLength());
+        System.out.println(response.getResponse().getContentLength());
+        System.out.println(productRepository.count());
     }
 }
