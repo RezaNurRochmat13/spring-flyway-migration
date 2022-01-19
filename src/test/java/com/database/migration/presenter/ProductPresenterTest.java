@@ -1,41 +1,40 @@
 package com.database.migration.presenter;
 
+import com.database.migration.entity.Product;
 import com.database.migration.repository.ProductRepository;
 import com.database.migration.service.ProductServiceImpl;
 import org.flywaydb.core.Flyway;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductPresenterTest {
+    @LocalServerPort
+    private int port;
+
     @Autowired
-    private MockMvc mockMvc;
+    private RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private Flyway flyway;
 
     @MockBean
     private ProductServiceImpl productService;
@@ -45,25 +44,25 @@ public class ProductPresenterTest {
 
     @Before
     public void setUp() {
-        flyway.migrate();
+        List<Product> productList = Arrays.asList(
+                new Product("Indomie", "10000", 9),
+                new Product("Sarimi", "5000", 6)
+        );
+
+        productRepository.saveAll(productList);
     }
 
 
     @Test
     public void getAllProducts() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/api/v1/products")
-                .contentType(MediaType.APPLICATION_JSON);
+        String uri = "http://localhost:" + port + "/api/v1/products";
 
-        MvcResult response = mockMvc
-                .perform(requestBuilder)
-                .andReturn();
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+        JSONObject object = new JSONObject(response.getBody());
 
         // Assertion
-        assertEquals(200, response.getResponse().getStatus());
-        assertEquals(String.valueOf(MediaType.APPLICATION_JSON), response.getResponse().getContentType());
-//        assertEquals(2, response.getResponse().getContentLength());
-        System.out.println(response.getResponse().getContentLength());
-        System.out.println(productRepository.count());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
     }
 }
