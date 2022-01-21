@@ -3,7 +3,6 @@ package com.database.migration.presenter;
 import com.database.migration.entity.Product;
 import com.database.migration.repository.ProductRepository;
 import com.database.migration.service.ProductServiceImpl;
-import org.flywaydb.core.Flyway;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -54,8 +54,22 @@ public class ProductPresenterTest {
 
 
     @Test
-    public void getAllProducts() throws Exception {
+    public void getAllProductsWithoutPagination() throws Exception {
         String uri = "http://localhost:" + port + "/api/v1/products";
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+        JSONObject object = new JSONObject(response.getBody());
+
+        // Assertion
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, response.getHeaders().getContentType());
+    }
+
+    @Test
+    public void getAllProductsWithPagination() throws Exception {
+        String uri = "http://localhost:" + port + "/api/v1/products?page=" + new Random().nextInt() +
+                "&size=" + new Random().nextInt();
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
