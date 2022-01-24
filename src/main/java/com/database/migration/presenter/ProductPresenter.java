@@ -3,19 +3,19 @@ package com.database.migration.presenter;
 import com.database.migration.entity.ListResponse;
 import com.database.migration.entity.MetaResponse;
 import com.database.migration.entity.Product;
+import com.database.migration.entity.SingleResponse;
 import com.database.migration.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -29,7 +29,10 @@ public class ProductPresenter {
     @Autowired
     private MetaResponse metaResponse;
 
-    @GetMapping(value = "/products", produces = "application/json")
+    @Autowired
+    private SingleResponse singleResponse;
+
+    @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllProducts(@RequestParam(defaultValue = "0") Integer page,
                                                  @RequestParam(defaultValue = "0") Integer size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -46,5 +49,18 @@ public class ProductPresenter {
 
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getSingleProduct(@PathVariable Long id) {
+        Optional<Product> productById = productService.findProductById(id);
+
+        if (productById.isPresent()) {
+            singleResponse.setData(productById);
+            return new ResponseEntity<>(singleResponse, HttpStatus.OK);
+        } else {
+            singleResponse.setData(null);
+            return new ResponseEntity<>(singleResponse, HttpStatus.NOT_FOUND);
+        }
     }
 }
