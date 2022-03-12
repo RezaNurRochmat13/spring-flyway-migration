@@ -8,26 +8,25 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "products")
+@Table(name = "categories")
 @Getter
 @Setter
-public class Product implements Serializable {
+@NoArgsConstructor
+public class CategoryProduct implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
-    private String price;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "qty")
-    private Integer qty;
-
-    public Product(String name, String price, Integer qty) {
+    public CategoryProduct(Long id, String name, String description) {
+        this.id = id;
         this.name = name;
-        this.price = price;
-        this.qty = qty;
+        this.description = description;
     }
 }

@@ -1,8 +1,0 @@
-14:09:13.746 [main] INFO  c.d.migration.MigrationApplication - Starting MigrationApplication using Java 1.8.0_292 on MacBooks-MacBook-Pro.local with PID 35773 (/Users/macbookpro/Work/Eduprime/backend/migration/target/classes started by macbookpro in /Users/macbookpro/Work/Eduprime/backend/migration)
-14:09:13.759 [main] INFO  c.d.migration.MigrationApplication - The following profiles are active: dev
-14:09:22.735 [main] INFO  c.d.migration.MigrationApplication - Started MigrationApplication in 15.155 seconds (JVM running for 16.499)
-14:09:22.763 [main] WARN  c.d.migration.MigrationApplication - Example Warn Level
-14:09:46.884 [main] INFO  c.d.migration.MigrationApplication - Starting MigrationApplication using Java 1.8.0_292 on MacBooks-MacBook-Pro.local with PID 35793 (/Users/macbookpro/Work/Eduprime/backend/migration/target/classes started by macbookpro in /Users/macbookpro/Work/Eduprime/backend/migration)
-14:09:46.888 [main] INFO  c.d.migration.MigrationApplication - The following profiles are active: dev
-14:09:52.908 [main] INFO  c.d.migration.MigrationApplication - Started MigrationApplication in 11.701 seconds (JVM running for 12.73)
-14:09:52.950 [main] WARN  c.d.migration.MigrationApplication - Example Warn Level
