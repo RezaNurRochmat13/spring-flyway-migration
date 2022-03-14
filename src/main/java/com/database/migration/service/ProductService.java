@@ -4,9 +4,10 @@ import com.database.migration.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 public interface ProductService {
     Page<Product> findAllProducts(Pageable pageable);
-    Optional<Product> findProductById(Long id);
+    Product findProductById(Long id);
+    Product createNewProducts(Product payload);
+    Product updateProduct(Long id, Product payload);
+    void deleteProduct(Long id);
 }

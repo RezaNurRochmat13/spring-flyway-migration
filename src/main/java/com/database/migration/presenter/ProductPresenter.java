@@ -53,14 +53,35 @@ public class ProductPresenter {
 
     @GetMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getSingleProduct(@PathVariable Long id) {
-        Optional<Product> productById = productService.findProductById(id);
+        Product productById = productService.findProductById(id);
+        singleResponse.setData(productById);
 
-        if (productById.isPresent()) {
-            singleResponse.setData(productById);
-            return new ResponseEntity<>(singleResponse, HttpStatus.OK);
-        } else {
-            singleResponse.setData(null);
-            return new ResponseEntity<>(singleResponse, HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(singleResponse, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> createNewProducts(@RequestBody Product payload) {
+        Product productCreated = productService.createNewProducts(payload);
+
+        singleResponse.setData(productCreated);
+
+        return new ResponseEntity<>(singleResponse, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateProduct(@PathVariable Long id,
+                                                @RequestBody Product payload) {
+        Product productUpdated = productService.updateProduct(id, payload);
+
+        singleResponse.setData(productUpdated);
+
+        return new ResponseEntity<>(singleResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
+        singleResponse.setData(null);
+
+        return new ResponseEntity<>(singleResponse, HttpStatus.OK);
     }
 }
