@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Table(name = "products")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
