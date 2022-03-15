@@ -26,6 +26,9 @@ public class Product implements Serializable {
     @Column(name = "qty")
     private Integer qty;
 
+    @Column(name = "category_id")
+    private Long categoryProductId;
+
     public Product(String name, String price, Integer qty) {
         this.name = name;
         this.price = price;
