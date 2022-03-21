@@ -4,6 +4,7 @@ import com.database.migration.entity.ListResponse;
 import com.database.migration.entity.MetaResponse;
 import com.database.migration.entity.Product;
 import com.database.migration.entity.SingleResponse;
+import com.database.migration.entity.dto.ListProductDto;
 import com.database.migration.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,11 +34,11 @@ public class ProductPresenter {
     private SingleResponse singleResponse;
 
     @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllProducts(@RequestParam(defaultValue = "0") Integer page,
-                                                 @RequestParam(defaultValue = "0") Integer size) {
+    public ResponseEntity<Object> getAllProducts(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+                                                 @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Product> productList = productService.findAllProducts(pageable);
+        Page<ListProductDto> productList = productService.findAllProducts(pageable);
 
         metaResponse.setCount(productList.getTotalPages());
         metaResponse.setTotal(productList.getTotalElements());
