@@ -1,9 +1,9 @@
 package com.database.migration.presenter;
 
-import com.database.migration.entity.ListResponse;
-import com.database.migration.entity.MetaResponse;
+import com.database.migration.util.ListResponse;
+import com.database.migration.util.MetaResponse;
 import com.database.migration.entity.Product;
-import com.database.migration.entity.SingleResponse;
+import com.database.migration.util.SingleResponse;
 import com.database.migration.entity.dto.ListProductDto;
 import com.database.migration.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")

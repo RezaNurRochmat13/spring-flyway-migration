@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ModelMapperUtility {
+
     @Bean
     public ModelMapper modelMapperUtil() {
         return new ModelMapper();

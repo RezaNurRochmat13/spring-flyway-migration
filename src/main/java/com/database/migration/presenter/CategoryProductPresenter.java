@@ -1,9 +1,9 @@
 package com.database.migration.presenter;
 
 import com.database.migration.entity.CategoryProduct;
-import com.database.migration.entity.ListResponse;
-import com.database.migration.entity.MetaResponse;
-import com.database.migration.entity.SingleResponse;
+import com.database.migration.util.ListResponse;
+import com.database.migration.util.MetaResponse;
+import com.database.migration.util.SingleResponse;
 import com.database.migration.service.CategoryProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
