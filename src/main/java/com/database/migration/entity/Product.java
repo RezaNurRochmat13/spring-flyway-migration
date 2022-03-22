@@ -30,9 +30,10 @@ public class Product extends AuditModel implements Serializable {
     @Column(name = "category_id")
     private Long categoryId;
 
-    public Product(String name, String price, Integer qty) {
+    public Product(String name, String price, Integer qty, Long categoryId) {
         this.name = name;
         this.price = price;
         this.qty = qty;
+        this.categoryId = categoryId;
     }
 }

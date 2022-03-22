@@ -1,6 +1,7 @@
 package com.database.migration.presenter;
 
 import com.database.migration.MigrationApplicationTests;
+import com.database.migration.entity.CategoryProduct;
 import com.database.migration.entity.Product;
 import com.database.migration.repository.ProductRepository;
 import com.database.migration.service.ProductServiceImpl;
@@ -8,10 +9,8 @@ import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,9 +45,13 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Before
     public void setUp() {
+        CategoryProduct categoryProduct = new CategoryProduct();
+        categoryProduct.setName("Sembako");
+        categoryProduct.setDescription("Sembako");
+
         List<Product> productList = Arrays.asList(
-                new Product("Indomie", "10000", 9),
-                new Product("Sarimi", "5000", 6)
+                new Product("Indomie", "10000", 9, categoryProduct.getId()),
+                new Product("Sarimi", "5000", 6, categoryProduct.getId())
         );
 
         productRepository.saveAll(productList);
@@ -88,8 +91,12 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Test
     public void testGetSingleProductWithValidIds() throws Exception {
+        CategoryProduct categoryProduct = new CategoryProduct();
+        categoryProduct.setName("Sembako");
+        categoryProduct.setDescription("Sembako");
+
         Product product = productRepository.save(
-                new Product("Indomie", "1200", 6)
+                new Product("Indomie", "1200", 6, categoryProduct.getId())
         );
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -107,10 +114,15 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Test
     public void testCreateProductWithPayload() throws Exception {
+        CategoryProduct categoryProduct = new CategoryProduct();
+        categoryProduct.setName("Sembako");
+        categoryProduct.setDescription("Sembako");
+
         JSONObject payload = new JSONObject();
         payload.put("name", "Indomilk");
         payload.put("qty", new Random().nextInt());
         payload.put("price", "1500");
+        payload.put("category_id", categoryProduct.getId());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/api/v1/products")
@@ -141,10 +153,15 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Test
     public void testUpdateProductWithPayload() throws Exception {
+        CategoryProduct categoryProduct = new CategoryProduct();
+        categoryProduct.setName("Sembako");
+        categoryProduct.setDescription("Sembako");
+
         JSONObject payload = new JSONObject();
         payload.put("name", "Indomilk");
         payload.put("qty", new Random().nextInt());
         payload.put("price", "1500");
+        payload.put("category_id", categoryProduct.getId());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/api/v1/products/" + new Random().nextLong())

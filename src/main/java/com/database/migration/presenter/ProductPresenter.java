@@ -55,6 +55,7 @@ public class ProductPresenter {
     @GetMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getSingleProduct(@PathVariable Long id) {
         Product productById = productService.findProductById(id);
+
         singleResponse.setData(productById);
 
         return new ResponseEntity<>(singleResponse, HttpStatus.OK);
