@@ -2,6 +2,7 @@ package com.database.migration.service;
 
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.entity.Product;
+import com.database.migration.entity.dto.CreateProductDto;
 import com.database.migration.entity.dto.ListProductDto;
 import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     public Page<ListProductDto> findAllProducts(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
 
-        return mapperProductToDto(products, pageable);
+        return mapperListProductToDto(products, pageable);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createNewProducts(Product payload) {
-        return productRepository.save(payload);
+    public Product createNewProducts(CreateProductDto payload) {
+        return mapperDtoCreateProductToEntity(payload);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(productById);
     }
 
-    private Page<ListProductDto> mapperProductToDto(Page<Product> products, Pageable pageable) {
+    private Page<ListProductDto> mapperListProductToDto(Page<Product> products, Pageable pageable) {
         List<ListProductDto> listProductDtoList = new ArrayList<>();
 
         for (Product product: products) {
@@ -77,8 +77,8 @@ public class ProductServiceImpl implements ProductService {
                     .modelMapperUtil()
                     .map(product, ListProductDto.class);
             CategoryProduct categoryProductById = categoryProductRepository
-                    .findById(product.getCategoryProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryProductId()));
+                    .findById(product.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
 
             listProductDto.setId(product.getId());
             listProductDto.setName(product.getName());
@@ -89,5 +89,24 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return new PageImpl<ListProductDto>(listProductDtoList, pageable, listProductDtoList.size());
+    }
+
+    private Product mapperDtoCreateProductToEntity(CreateProductDto createProductDto) {
+        Product product = mapperUtility
+                .modelMapperUtil()
+                .map(createProductDto, Product.class);
+
+        CategoryProduct categoryProduct = categoryProductRepository
+                .findById(createProductDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Data not found with id : "
+                        + createProductDto.getCategoryId()));
+
+        product.setId(null);
+        product.setName(createProductDto.getName());
+        product.setQty(createProductDto.getQty());
+        product.setPrice(createProductDto.getPrice());
+        product.setCategoryId(categoryProduct.getId());
+
+        return productRepository.save(product);
     }
 }

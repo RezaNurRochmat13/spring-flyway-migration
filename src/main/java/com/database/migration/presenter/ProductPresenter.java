@@ -1,5 +1,6 @@
 package com.database.migration.presenter;
 
+import com.database.migration.entity.dto.CreateProductDto;
 import com.database.migration.util.ListResponse;
 import com.database.migration.util.MetaResponse;
 import com.database.migration.entity.Product;
@@ -60,7 +61,7 @@ public class ProductPresenter {
     }
 
     @PostMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createNewProducts(@RequestBody Product payload) {
+    public ResponseEntity<Object> createNewProducts(@RequestBody CreateProductDto payload) {
         Product productCreated = productService.createNewProducts(payload);
 
         singleResponse.setData(productCreated);

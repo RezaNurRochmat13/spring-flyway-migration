@@ -28,7 +28,7 @@ public class Product extends AuditModel implements Serializable {
     private Integer qty;
 
     @Column(name = "category_id")
-    private Long categoryProductId;
+    private Long categoryId;
 
     public Product(String name, String price, Integer qty) {
         this.name = name;
