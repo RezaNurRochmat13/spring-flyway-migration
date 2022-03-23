@@ -3,6 +3,7 @@ package com.database.migration.service;
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.entity.Product;
 import com.database.migration.entity.dto.CreateProductDto;
+import com.database.migration.entity.dto.DetailProductDto;
 import com.database.migration.entity.dto.ListProductDto;
 import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
@@ -37,9 +38,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findProductById(Long id) {
-        return productRepository.findById(id)
+    public DetailProductDto findProductById(Long id) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + id));
+
+        return mapperEntityDetailProductToDto(product);
     }
 
     @Override
@@ -108,5 +111,25 @@ public class ProductServiceImpl implements ProductService {
         product.setCategoryId(categoryProduct.getId());
 
         return productRepository.save(product);
+    }
+
+    private DetailProductDto mapperEntityDetailProductToDto(Product product) {
+        DetailProductDto detailProductDto = mapperUtility
+                .modelMapperUtil()
+                .map(product, DetailProductDto.class);
+
+        CategoryProduct categoryProduct = categoryProductRepository
+                .findById(product.getCategoryId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
+
+        detailProductDto.setId(product.getId());
+        detailProductDto.setName(product.getName());
+        detailProductDto.setPrice(product.getPrice());
+        detailProductDto.setQty(product.getQty());
+        detailProductDto.setCategoryName(categoryProduct.getName());
+        detailProductDto.setCreatedAt(product.getCreatedAt());
+        detailProductDto.setUpdatedAt(product.getUpdatedAt());
+
+        return detailProductDto;
     }
 }

@@ -1,6 +1,7 @@
 package com.database.migration.presenter;
 
 import com.database.migration.entity.dto.CreateProductDto;
+import com.database.migration.entity.dto.DetailProductDto;
 import com.database.migration.util.ListResponse;
 import com.database.migration.util.MetaResponse;
 import com.database.migration.entity.Product;
@@ -54,7 +55,7 @@ public class ProductPresenter {
 
     @GetMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getSingleProduct(@PathVariable Long id) {
-        Product productById = productService.findProductById(id);
+        DetailProductDto productById = productService.findProductById(id);
 
         singleResponse.setData(productById);
 
