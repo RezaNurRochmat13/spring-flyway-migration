@@ -2,6 +2,7 @@ package com.database.migration.presenter;
 
 import com.database.migration.MigrationApplicationTests;
 import com.database.migration.entity.CategoryProduct;
+import com.database.migration.entity.Product;
 import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
 import org.json.JSONObject;
@@ -211,8 +212,14 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Test
     public void testDeleteProductWithValidIds() throws Exception {
+        CategoryProduct categoryProduct = categoryProductRepository
+                .save(new CategoryProduct(21L, "Sembako", "Sembako kategori"));
+
+        Product product = productRepository
+                .save(new Product("Sidu", "1000", 2, categoryProduct.getId()));
+
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/api/v1/products/1")
+                .delete("/api/v1/products/" + product.getId())
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult response = mockMvc
