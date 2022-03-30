@@ -2,7 +2,7 @@ package com.database.migration.presenter;
 
 import com.database.migration.MigrationApplicationTests;
 import com.database.migration.entity.CategoryProduct;
-import com.database.migration.entity.Product;
+import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -31,6 +31,9 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryProductRepository categoryProductRepository;
 
     @Test
     public void testGetAllProductsWithoutPagination() throws Exception {
@@ -62,8 +65,7 @@ public class ProductPresenterTests extends MigrationApplicationTests {
                 .perform(requestBuilder)
                 .andReturn();
 
-        // Assertion
-        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());;
+        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());
 
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
@@ -72,16 +74,8 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Test
     public void testGetSingleProductWithValidIds() throws Exception {
-        CategoryProduct categoryProduct = new CategoryProduct();
-        categoryProduct.setName("Sembako");
-        categoryProduct.setDescription("Sembako");
-
-        Product product = productRepository.save(
-                new Product("Indomie", "1200", 6, categoryProduct.getId())
-        );
-
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/api/v1/products/" + product.getId())
+                .get("/api/v1/products/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -89,15 +83,33 @@ public class ProductPresenterTests extends MigrationApplicationTests {
                 .perform(requestBuilder)
                 .andReturn();
 
+        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());
+
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
+        assertEquals("Indomilk", jsonObject.getJSONObject("data").get("name"));
+
+
+    }
+
+    @Test
+    public void testGetSingleProductWithInvalidIds() throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/api/v1/products/" + new Random().nextLong())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        assertEquals(404, response.getResponse().getStatus());
     }
 
     @Test
     public void testCreateProductWithPayload() throws Exception {
-        CategoryProduct categoryProduct = new CategoryProduct();
-        categoryProduct.setName("Sembako");
-        categoryProduct.setDescription("Sembako");
+        CategoryProduct categoryProduct = categoryProductRepository.save(
+                new CategoryProduct(1L, "Sembako", "Sembako kategori"));
 
         JSONObject payload = new JSONObject();
         payload.put("name", "Indomilk");
@@ -115,7 +127,7 @@ public class ProductPresenterTests extends MigrationApplicationTests {
                 .andReturn();
 
         // Assertion
-        assertEquals(200, response.getResponse().getStatus());
+        assertEquals(201, response.getResponse().getStatus());
     }
 
     @Test
@@ -133,7 +145,32 @@ public class ProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void testUpdateProductWithPayload() throws Exception {
+    public void testUpdateProductWithPayloadAndValidIds() throws Exception {
+        CategoryProduct categoryProduct = new CategoryProduct();
+        categoryProduct.setName("Sembako");
+        categoryProduct.setDescription("Sembako");
+
+        JSONObject payload = new JSONObject();
+        payload.put("name", "Indomilk");
+        payload.put("qty", new Random().nextInt());
+        payload.put("price", "1500");
+        payload.put("category_id", categoryProduct.getId());
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/api/v1/products/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload.toString());
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        // Assertion
+        assertEquals(200, response.getResponse().getStatus());
+    }
+
+    @Test
+    public void testUpdateProductWithPayloadAndInvalidIds() throws Exception {
         CategoryProduct categoryProduct = new CategoryProduct();
         categoryProduct.setName("Sembako");
         categoryProduct.setDescription("Sembako");
@@ -154,14 +191,14 @@ public class ProductPresenterTests extends MigrationApplicationTests {
                 .andReturn();
 
         // Assertion
-        assertEquals(200, response.getResponse().getStatus());
+        assertEquals(404, response.getResponse().getStatus());
     }
 
     @Test
     public void testUpdateProductWithoutPayload() throws Exception {
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/api/v1/products/" + new Random().nextLong())
+                .put("/api/v1/products/1" + new Random().nextLong())
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult response = mockMvc
@@ -173,10 +210,9 @@ public class ProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void testDeleteProduct() throws Exception {
-
+    public void testDeleteProductWithValidIds() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/api/v1/products/" + new Random().nextLong())
+                .delete("/api/v1/products/1")
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult response = mockMvc
@@ -187,4 +223,18 @@ public class ProductPresenterTests extends MigrationApplicationTests {
         assertEquals(200, response.getResponse().getStatus());
     }
 
+    @Test
+    public void testDeleteProductWithInvalidIds() throws Exception {
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete("/api/v1/products/" + new Random().nextLong())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        // Assertion
+        assertEquals(404, response.getResponse().getStatus());
+    }
 }

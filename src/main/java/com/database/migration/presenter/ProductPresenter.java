@@ -83,6 +83,8 @@ public class ProductPresenter {
 
     @DeleteMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+
         singleResponse.setData(null);
 
         return new ResponseEntity<>(singleResponse, HttpStatus.OK);
