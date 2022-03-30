@@ -46,7 +46,7 @@ public class ProductPresenter {
         metaResponse.setPage(page);
         metaResponse.setCurrentPage(productList.getNumber());
 
-        listResponse.setData(Collections.singletonList(productList.getContent()));
+        listResponse.setData(productList.getContent());
         listResponse.setMetaResponse(metaResponse);
 
 

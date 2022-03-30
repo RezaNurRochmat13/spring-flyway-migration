@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ListResponse {
-    private List<Object> data;
+    private Object data;
     private MetaResponse metaResponse;
 
 }

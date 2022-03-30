@@ -4,30 +4,25 @@ import com.database.migration.MigrationApplicationTests;
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.entity.Product;
 import com.database.migration.repository.ProductRepository;
-import com.database.migration.service.ProductServiceImpl;
-import org.json.simple.JSONObject;
-import org.junit.Before;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class ProductPresenterTests extends MigrationApplicationTests {
@@ -36,27 +31,6 @@ public class ProductPresenterTests extends MigrationApplicationTests {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private ProductServiceImpl productService;
-
-    @MockBean
-    private ProductPresenter productPresenter;
-
-    @Before
-    public void setUp() {
-        CategoryProduct categoryProduct = new CategoryProduct();
-        categoryProduct.setName("Sembako");
-        categoryProduct.setDescription("Sembako");
-
-        List<Product> productList = Arrays.asList(
-                new Product("Indomie", "10000", 9, categoryProduct.getId()),
-                new Product("Sarimi", "5000", 6, categoryProduct.getId())
-        );
-
-        productRepository.saveAll(productList);
-    }
-
 
     @Test
     public void testGetAllProductsWithoutPagination() throws Exception {
@@ -69,8 +43,11 @@ public class ProductPresenterTests extends MigrationApplicationTests {
                 .perform(requestBuilder)
                 .andReturn();
 
+        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());;
+
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
+        assertEquals(4, jsonObject.getJSONArray("data").length());
     }
 
     @Test
@@ -86,7 +63,11 @@ public class ProductPresenterTests extends MigrationApplicationTests {
                 .andReturn();
 
         // Assertion
+        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());;
+
+        // Assertion
         assertEquals(200, response.getResponse().getStatus());
+        assertEquals(4, jsonObject.getJSONArray("data").length());
     }
 
     @Test
@@ -127,7 +108,7 @@ public class ProductPresenterTests extends MigrationApplicationTests {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(payload.toJSONString());
+                .content(payload.toString());
 
         MvcResult response = mockMvc
                 .perform(requestBuilder)
@@ -166,7 +147,7 @@ public class ProductPresenterTests extends MigrationApplicationTests {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/api/v1/products/" + new Random().nextLong())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(payload.toJSONString());
+                .content(payload.toString());
 
         MvcResult response = mockMvc
                 .perform(requestBuilder)
