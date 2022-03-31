@@ -1,10 +1,10 @@
 package com.database.migration.presenter;
 
 import com.database.migration.entity.CategoryProduct;
+import com.database.migration.service.CategoryProductService;
 import com.database.migration.util.ListResponse;
 import com.database.migration.util.MetaResponse;
 import com.database.migration.util.SingleResponse;
-import com.database.migration.service.CategoryProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -32,18 +30,18 @@ public class CategoryProductPresenter {
     private MetaResponse metaResponse;
 
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllCategories(@RequestParam(defaultValue = "0") Integer page,
-                                                   @RequestParam(defaultValue = "0") Integer size) {
+    public ResponseEntity<Object> getAllCategories(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+                                                   @RequestParam(value= "size", defaultValue = "10", required = false) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryProduct> categoriesList = categoryProductService.findAllCategoryProducts(pageable);
 
-        metaResponse.setCount(categoriesList.getTotalPages());
+        metaResponse.setCount(categoriesList.getSize());
         metaResponse.setTotal(categoriesList.getTotalElements());
         metaResponse.setPage(page);
         metaResponse.setCurrentPage(categoriesList.getNumber());
 
         listResponse.setMetaResponse(metaResponse);
-        listResponse.setData(Collections.singletonList(categoriesList));
+        listResponse.setData(categoriesList.getContent());
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
