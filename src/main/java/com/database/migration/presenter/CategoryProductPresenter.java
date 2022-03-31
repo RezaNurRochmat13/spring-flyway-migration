@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,5 +54,15 @@ public class CategoryProductPresenter {
         singleResponse.setData(categoryProduct);
 
         return new ResponseEntity<>(singleResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/categories")
+    public ResponseEntity<Object> createCategoryProduct(@Validated @RequestBody CategoryProduct payload) {
+        CategoryProduct categoryProductSave = categoryProductService
+                .createCategoryProduct(payload);
+
+        singleResponse.setData(categoryProductSave);
+
+        return new ResponseEntity<>(singleResponse, HttpStatus.CREATED);
     }
 }

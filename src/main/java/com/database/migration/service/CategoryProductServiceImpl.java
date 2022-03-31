@@ -23,4 +23,9 @@ public class CategoryProductServiceImpl implements CategoryProductService {
         return categoryProductRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found id : " + id));
     }
+
+    @Override
+    public CategoryProduct createCategoryProduct(CategoryProduct categoryProduct) {
+        return categoryProductRepository.save(categoryProduct);
+    }
 }

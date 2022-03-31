@@ -63,7 +63,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
 
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
-        assertEquals(5, jsonObject.getJSONArray("data").length());
+        assertEquals(6, jsonObject.getJSONArray("data").length());
 
     }
 
@@ -86,7 +86,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
 
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
-        assertEquals(5, jsonObject.getJSONArray("data").length());
+        assertEquals(6, jsonObject.getJSONArray("data").length());
     }
 
     @Test
@@ -128,8 +128,40 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void testCreateNewCategoriesWithValidPayload() throws Exception {}
+    public void testCreateNewCategoriesWithValidPayload() throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "Alat makan");
+        jsonObject.put("description", "");
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonObject.toString());
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        JSONObject parseResponse = new JSONObject(response.getResponse().getContentAsString());
+        JSONObject actual = parseResponse.getJSONObject("data");
+
+        // Assertion
+        assertEquals(201, response.getResponse().getStatus());
+        assertEquals("Alat makan", actual.get("name"));
+
+    }
 
     @Test
-    public void testCreateNewCategoriesWithoutPayload() throws Exception {}
+    public void testCreateNewCategoriesWithoutPayload() throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        // Assertion
+        assertEquals(400, response.getResponse().getStatus());
+    }
 }

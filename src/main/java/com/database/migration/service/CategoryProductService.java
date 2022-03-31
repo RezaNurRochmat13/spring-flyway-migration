@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface CategoryProductService {
     Page<CategoryProduct> findAllCategoryProducts(Pageable pageable);
     CategoryProduct findCategoryProductById(Long id);
+    CategoryProduct createCategoryProduct(CategoryProduct categoryProduct);
 }
