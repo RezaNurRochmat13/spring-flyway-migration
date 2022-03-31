@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -50,7 +49,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void getAllCategoriesWithPagination() throws Exception {
+    public void testGetAllCategoriesWithPagination() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/api/v1/categories?page=0&size=10")
                 .accept(MediaType.APPLICATION_JSON)
@@ -69,7 +68,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void getAllCategoriesWithoutPagination() throws Exception {
+    public void testGetAllCategoriesWithoutPagination() throws Exception {
         List<CategoryProduct> categoryRecords = new ArrayList<>(Arrays.asList(CATEGORY_1, CATEGORY_2, CATEGORY_3));
 
         categoryProductRepo.saveAll(categoryRecords);
@@ -83,7 +82,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
                 .perform(requestBuilder)
                 .andReturn();
 
-        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());;
+        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());
 
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
@@ -91,7 +90,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void getCategoriesByIdWithInvalidId() throws Exception {
+    public void testGetCategoriesByIdWithInvalidId() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/api/v1/categories/" + new Random().nextLong())
                 .accept(MediaType.APPLICATION_JSON)
@@ -106,7 +105,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
     }
 
     @Test
-    public void getCategoriesByIdWithValidId() throws Exception {
+    public void testGetCategoriesByIdWithValidId() throws Exception {
         CategoryProduct categoryProduct = categoryProductRepo
                 .save(new CategoryProduct(1L, "Alat tulis", ""));
 
@@ -119,7 +118,18 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
                 .perform(requestBuilder)
                 .andReturn();
 
+        JSONObject jsonObject = new JSONObject(response.getResponse().getContentAsString());
+        JSONObject actual = jsonObject.getJSONObject("data");
+
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
+        assertEquals("Alat tulis", actual.get("name"));
+
     }
+
+    @Test
+    public void testCreateNewCategoriesWithValidPayload() throws Exception {}
+
+    @Test
+    public void testCreateNewCategoriesWithoutPayload() throws Exception {}
 }
