@@ -8,4 +8,5 @@ public interface CategoryProductService {
     Page<CategoryProduct> findAllCategoryProducts(Pageable pageable);
     CategoryProduct findCategoryProductById(Long id);
     CategoryProduct createCategoryProduct(CategoryProduct categoryProduct);
+    CategoryProduct updateCategoryProduct(Long id, CategoryProduct payload);
 }

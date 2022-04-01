@@ -28,4 +28,16 @@ public class CategoryProductServiceImpl implements CategoryProductService {
     public CategoryProduct createCategoryProduct(CategoryProduct categoryProduct) {
         return categoryProductRepository.save(categoryProduct);
     }
+
+    @Override
+    public CategoryProduct updateCategoryProduct(Long id, CategoryProduct payload) {
+        CategoryProduct categoryProductById = categoryProductRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found id : " + id));
+
+        categoryProductById.setName(payload.getName());
+        categoryProductById.setDescription(payload.getDescription());
+        categoryProductRepository.save(categoryProductById);
+
+        return categoryProductById;
+    }
 }

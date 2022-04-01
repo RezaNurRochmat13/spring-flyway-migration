@@ -65,4 +65,14 @@ public class CategoryProductPresenter {
 
         return new ResponseEntity<>(singleResponse, HttpStatus.CREATED);
     }
+
+    @PutMapping("/categories/{id}")
+    public ResponseEntity<Object> updateCategoryProduct(@PathVariable Long id,
+                                                        @RequestBody CategoryProduct payload) {
+        CategoryProduct categoryProductUpdate = categoryProductService.updateCategoryProduct(id, payload);
+
+        singleResponse.setData(categoryProductUpdate);
+
+        return new ResponseEntity<>(singleResponse, HttpStatus.OK);
+    }
 }
