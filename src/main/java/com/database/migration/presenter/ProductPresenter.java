@@ -41,7 +41,7 @@ public class ProductPresenter {
 
         Page<ListProductDto> productList = productService.findAllProducts(pageable);
 
-        metaResponse.setCount(productList.getTotalPages());
+        metaResponse.setCount(productList.getSize());
         metaResponse.setTotal(productList.getTotalElements());
         metaResponse.setPage(page);
         metaResponse.setCurrentPage(productList.getNumber());
