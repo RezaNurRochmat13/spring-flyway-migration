@@ -9,4 +9,5 @@ public interface CategoryProductService {
     CategoryProduct findCategoryProductById(Long id);
     CategoryProduct createCategoryProduct(CategoryProduct categoryProduct);
     CategoryProduct updateCategoryProduct(Long id, CategoryProduct payload);
+    void deleteCategoryProduct(Long id);
 }

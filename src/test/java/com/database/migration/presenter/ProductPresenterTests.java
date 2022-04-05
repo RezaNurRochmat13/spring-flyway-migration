@@ -36,6 +36,7 @@ public class ProductPresenterTests extends MigrationApplicationTests {
     @Autowired
     private CategoryProductRepository categoryProductRepository;
 
+
     @Test
     public void testGetAllProductsWithoutPagination() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders

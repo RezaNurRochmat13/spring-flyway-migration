@@ -4,6 +4,7 @@ import com.database.migration.MigrationApplicationTests;
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.repository.CategoryProductRepository;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,7 +64,7 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
 
         // Assertion
         assertEquals(200, response.getResponse().getStatus());
-        assertEquals(6, jsonObject.getJSONArray("data").length());
+        assertEquals(5, jsonObject.getJSONArray("data").length());
 
     }
 
@@ -219,5 +220,36 @@ public class CategoryProductPresenterTests extends MigrationApplicationTests {
 
         // Assertion
         assertEquals(400, response.getResponse().getStatus());
+    }
+
+    @Test
+    public void testDeleteCategoriesWithValidId() throws Exception {
+        CategoryProduct categoryProduct = categoryProductRepo
+                .save(new CategoryProduct(6L, "Alat mandi", ""));
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete("/api/v1/categories/" + categoryProduct.getId())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        // Assertion
+        assertEquals(204, response.getResponse().getStatus());
+    }
+
+    @Test
+    public void testDeleteCategoriesWithInvalidId() throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete("/api/v1/categories/" + new Random().nextLong())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult response = mockMvc
+                .perform(requestBuilder)
+                .andReturn();
+
+        // Assertion
+        assertEquals(404, response.getResponse().getStatus());
     }
 }

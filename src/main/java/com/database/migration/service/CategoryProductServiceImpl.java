@@ -40,4 +40,12 @@ public class CategoryProductServiceImpl implements CategoryProductService {
 
         return categoryProductById;
     }
+
+    @Override
+    public void deleteCategoryProduct(Long id) {
+        CategoryProduct categoryProductById = categoryProductRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found id : " + id));
+
+        categoryProductRepository.delete(categoryProductById);
+    }
 }

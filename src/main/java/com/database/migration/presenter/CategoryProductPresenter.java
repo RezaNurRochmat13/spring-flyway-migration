@@ -75,4 +75,11 @@ public class CategoryProductPresenter {
 
         return new ResponseEntity<>(singleResponse, HttpStatus.OK);
     }
+
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Object> deleteCategoryProduct(@PathVariable Long id) {
+        categoryProductService.deleteCategoryProduct(id);
+
+        return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
+    }
 }
