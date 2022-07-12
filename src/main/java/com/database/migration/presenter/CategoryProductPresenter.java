@@ -27,19 +27,17 @@ public class CategoryProductPresenter {
     @Autowired
     private SingleResponse singleResponse;
 
-    @Autowired
-    private MetaResponse metaResponse;
-
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllCategories(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
                                                    @RequestParam(value= "size", defaultValue = "10", required = false) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryProduct> categoriesList = categoryProductService.findAllCategoryProducts(pageable);
 
-        metaResponse.setCount(categoriesList.getSize());
-        metaResponse.setTotal(categoriesList.getTotalElements());
-        metaResponse.setPage(page);
-        metaResponse.setCurrentPage(categoriesList.getNumber());
+        MetaResponse metaResponse = MetaResponse.builder()
+                .count(categoriesList.getSize())
+                .total(categoriesList.getTotalElements())
+                .page(page)
+                .currentPage(categoriesList.getNumber()).build();
 
         listResponse.setMetaResponse(metaResponse);
         listResponse.setData(categoriesList.getContent());

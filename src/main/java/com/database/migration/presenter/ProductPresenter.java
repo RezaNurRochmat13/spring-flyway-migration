@@ -29,9 +29,6 @@ public class ProductPresenter {
     private ListResponse listResponse;
 
     @Autowired
-    private MetaResponse metaResponse;
-
-    @Autowired
     private SingleResponse singleResponse;
 
     @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,10 +38,11 @@ public class ProductPresenter {
 
         Page<ListProductDto> productList = productService.findAllProducts(pageable);
 
-        metaResponse.setCount(productList.getSize());
-        metaResponse.setTotal(productList.getTotalElements());
-        metaResponse.setPage(page);
-        metaResponse.setCurrentPage(productList.getNumber());
+        MetaResponse metaResponse = MetaResponse.builder()
+                .count(productList.getSize())
+                .total(productList.getTotalElements())
+                .page(page)
+                .currentPage(productList.getNumber()).build();
 
         listResponse.setData(productList.getContent());
         listResponse.setMetaResponse(metaResponse);

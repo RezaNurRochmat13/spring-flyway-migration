@@ -1,12 +1,10 @@
 package com.database.migration.util;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
-@Component
-@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 public class MetaResponse {
