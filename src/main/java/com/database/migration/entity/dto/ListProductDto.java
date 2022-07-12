@@ -1,13 +1,14 @@
 package com.database.migration.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 
-@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 public class ListProductDto implements Serializable {

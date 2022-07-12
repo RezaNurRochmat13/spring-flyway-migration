@@ -76,22 +76,21 @@ public class ProductServiceImpl implements ProductService {
         List<ListProductDto> listProductDtoList = new ArrayList<>();
 
         for (Product product: products) {
-            ListProductDto listProductDto = mapperUtility
-                    .modelMapperUtil()
-                    .map(product, ListProductDto.class);
             CategoryProduct categoryProductById = categoryProductRepository
                     .findById(product.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
 
-            listProductDto.setId(product.getId());
-            listProductDto.setName(product.getName());
-            listProductDto.setPrice(product.getPrice());
-            listProductDto.setCategoryName(categoryProductById.getName());
+            ListProductDto listProductDto = ListProductDto.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .price(product.getPrice())
+                    .categoryName(categoryProductById.getName())
+                    .build();
 
             listProductDtoList.add(listProductDto);
         }
 
-        return new PageImpl<ListProductDto>(listProductDtoList, pageable, listProductDtoList.size());
+        return new PageImpl<>(listProductDtoList, pageable, listProductDtoList.size());
     }
 
     private Product mapperDtoCreateProductToEntity(CreateProductDto createProductDto) {

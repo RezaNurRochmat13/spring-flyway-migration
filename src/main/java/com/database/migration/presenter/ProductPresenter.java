@@ -35,8 +35,8 @@ public class ProductPresenter {
     private SingleResponse singleResponse;
 
     @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllProducts(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
-                                                 @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
+    public ResponseEntity<Object> getAllProducts(@RequestParam(value = "page", defaultValue = "0", required = true) Integer page,
+                                                 @RequestParam(value = "size", defaultValue = "10", required = true) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<ListProductDto> productList = productService.findAllProducts(pageable);

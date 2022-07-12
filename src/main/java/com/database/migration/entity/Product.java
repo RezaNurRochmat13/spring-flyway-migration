@@ -1,6 +1,7 @@
 package com.database.migration.entity;
 
 import com.database.migration.util.AuditModel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,6 @@ import java.io.Serializable;
 @Table(name = "products")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Product extends AuditModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
