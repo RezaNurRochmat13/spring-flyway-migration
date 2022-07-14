@@ -26,9 +26,6 @@ public class ProductPresenter {
     private ProductServiceImpl productService;
 
     @Autowired
-    private ListResponse listResponse;
-
-    @Autowired
     private SingleResponse singleResponse;
 
     @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,11 +39,13 @@ public class ProductPresenter {
                 .count(productList.getSize())
                 .total(productList.getTotalElements())
                 .page(page)
-                .currentPage(productList.getNumber()).build();
+                .currentPage(productList.getNumber())
+                .build();
 
-        listResponse.setData(productList.getContent());
-        listResponse.setMetaResponse(metaResponse);
-
+        ListResponse listResponse = ListResponse.builder()
+                .data(productList.getContent())
+                .metaResponse(metaResponse)
+                .build();
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }

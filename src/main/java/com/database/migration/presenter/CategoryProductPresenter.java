@@ -22,9 +22,6 @@ public class CategoryProductPresenter {
     private CategoryProductService categoryProductService;
 
     @Autowired
-    private ListResponse listResponse;
-
-    @Autowired
     private SingleResponse singleResponse;
 
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,8 +36,10 @@ public class CategoryProductPresenter {
                 .page(page)
                 .currentPage(categoriesList.getNumber()).build();
 
-        listResponse.setMetaResponse(metaResponse);
-        listResponse.setData(categoriesList.getContent());
+        ListResponse listResponse = ListResponse.builder()
+                .metaResponse(metaResponse)
+                .data(categoriesList.getContent())
+                .build();
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }

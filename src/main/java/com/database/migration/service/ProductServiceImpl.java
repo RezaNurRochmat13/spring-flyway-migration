@@ -113,21 +113,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private DetailProductDto mapperEntityDetailProductToDto(Product product) {
-        DetailProductDto detailProductDto = mapperUtility
-                .modelMapperUtil()
-                .map(product, DetailProductDto.class);
-
         CategoryProduct categoryProduct = categoryProductRepository
                 .findById(product.getCategoryId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
 
-        detailProductDto.setId(product.getId());
-        detailProductDto.setName(product.getName());
-        detailProductDto.setPrice(product.getPrice());
-        detailProductDto.setQty(product.getQty());
-        detailProductDto.setCategoryName(categoryProduct.getName());
-        detailProductDto.setCreatedAt(product.getCreatedAt());
-        detailProductDto.setUpdatedAt(product.getUpdatedAt());
+        DetailProductDto detailProductDto = DetailProductDto.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .qty(product.getQty())
+                .categoryName(categoryProduct.getName())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
 
         return detailProductDto;
     }
