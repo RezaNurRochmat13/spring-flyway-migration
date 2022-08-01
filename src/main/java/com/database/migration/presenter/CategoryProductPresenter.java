@@ -21,9 +21,6 @@ public class CategoryProductPresenter {
     @Autowired
     private CategoryProductService categoryProductService;
 
-    @Autowired
-    private SingleResponse singleResponse;
-
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllCategories(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
                                                    @RequestParam(value= "size", defaultValue = "10", required = false) Integer size) {
@@ -48,7 +45,9 @@ public class CategoryProductPresenter {
     public ResponseEntity<Object> getSingleCategoryProduct(@PathVariable Long id) throws Exception {
         CategoryProduct categoryProduct = categoryProductService.findCategoryProductById(id);
 
-        singleResponse.setData(categoryProduct);
+        SingleResponse singleResponse = SingleResponse.builder()
+                .data(categoryProduct)
+                .build();
 
         return new ResponseEntity<>(singleResponse, HttpStatus.OK);
     }
@@ -58,7 +57,9 @@ public class CategoryProductPresenter {
         CategoryProduct categoryProductSave = categoryProductService
                 .createCategoryProduct(payload);
 
-        singleResponse.setData(categoryProductSave);
+        SingleResponse singleResponse = SingleResponse.builder()
+                .data(categoryProductSave)
+                .build();
 
         return new ResponseEntity<>(singleResponse, HttpStatus.CREATED);
     }
@@ -68,7 +69,9 @@ public class CategoryProductPresenter {
                                                         @RequestBody CategoryProduct payload) {
         CategoryProduct categoryProductUpdate = categoryProductService.updateCategoryProduct(id, payload);
 
-        singleResponse.setData(categoryProductUpdate);
+        SingleResponse singleResponse = SingleResponse.builder()
+                .data(categoryProductUpdate)
+                .build();
 
         return new ResponseEntity<>(singleResponse, HttpStatus.OK);
     }
