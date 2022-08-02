@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
@@ -19,15 +20,19 @@ public class Product extends AuditModel implements Serializable {
     private Long id;
 
     @Column(name = "name")
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(name = "price")
+    @NotBlank(message = "Price is mandatory")
     private String price;
 
     @Column(name = "qty")
+    @NotBlank(message = "Qty is mandatory")
     private Integer qty;
 
     @Column(name = "category_id")
+    @NotBlank(message = "Category id si mandatory")
     private Long categoryId;
 
     public Product(String name, String price, Integer qty, Long categoryId) {
