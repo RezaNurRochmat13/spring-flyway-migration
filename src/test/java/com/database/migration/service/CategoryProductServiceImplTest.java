@@ -2,21 +2,20 @@ package com.database.migration.service;
 
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.repository.CategoryProductRepository;
-import com.database.migration.util.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
-import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +34,17 @@ public class CategoryProductServiceImplTest {
 
     @Test
     public void findAllCategoryProducts() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<CategoryProduct> categoryProductPage = mock(Page.class);
+
+        given(categoryProductRepository.findAll(pageable)).willReturn(categoryProductPage);
+
+        Page<CategoryProduct> categoryProductPageExpected = categoryProductService
+                .findAllCategoryProducts(pageable);
+
+
+        assertThat(categoryProductPageExpected).isNotNull();
     }
 
     @Test
