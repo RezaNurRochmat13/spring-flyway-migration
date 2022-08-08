@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CategoryProductServiceImpl implements CategoryProductService {
     @Autowired
@@ -25,11 +27,13 @@ public class CategoryProductServiceImpl implements CategoryProductService {
     }
 
     @Override
+    @Transactional
     public CategoryProduct createCategoryProduct(CategoryProduct categoryProduct) {
         return categoryProductRepository.save(categoryProduct);
     }
 
     @Override
+    @Transactional
     public CategoryProduct updateCategoryProduct(Long id, CategoryProduct payload) {
         CategoryProduct categoryProductById = categoryProductRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found id : " + id));
@@ -42,6 +46,7 @@ public class CategoryProductServiceImpl implements CategoryProductService {
     }
 
     @Override
+    @Transactional
     public void deleteCategoryProduct(Long id) {
         CategoryProduct categoryProductById = categoryProductRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found id : " + id));
