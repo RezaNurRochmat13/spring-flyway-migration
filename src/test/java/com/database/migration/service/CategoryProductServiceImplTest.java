@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -59,6 +60,15 @@ public class CategoryProductServiceImplTest {
 
     @Test
     public void createCategoryProduct() {
+        given(categoryProductRepository.save(CATEGORY_1))
+                .willAnswer(invocation -> invocation.getArguments()[0]);
+
+        CategoryProduct categoryProductExpected = categoryProductService.createCategoryProduct(CATEGORY_1);
+
+        assertThat(categoryProductExpected).isNotNull();
+
+        verify(categoryProductRepository).save(CATEGORY_1);
+
     }
 
     @Test
