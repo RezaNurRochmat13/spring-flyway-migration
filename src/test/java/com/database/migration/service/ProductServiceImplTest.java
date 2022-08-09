@@ -10,9 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTest {
@@ -39,9 +41,21 @@ public class ProductServiceImplTest {
 
     @Test
     public void updateProduct() {
+        given(productRepository.save(PRODUCT_1)).willReturn(PRODUCT_1);
+        given(productRepository.findById(PRODUCT_1.getId())).willReturn(Optional.of(PRODUCT_1));
+
+        Product productExpected = productService
+                .updateProduct(PRODUCT_1.getId(), PRODUCT_1);
+
+        assertThat(productExpected).isNotNull();
     }
 
     @Test
     public void deleteProduct() {
+        when(productRepository.findById(PRODUCT_1.getId())).thenReturn(Optional.of(PRODUCT_1));
+
+        productService.deleteProduct(PRODUCT_1.getId());
+
+        verify(productRepository, times(1)).delete(PRODUCT_1);
     }
 }
