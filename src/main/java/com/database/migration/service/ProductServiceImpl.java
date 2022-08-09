@@ -9,6 +9,7 @@ import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
 import com.database.migration.util.ModelMapperUtility;
 import com.database.migration.util.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,6 +21,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
