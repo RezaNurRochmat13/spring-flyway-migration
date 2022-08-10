@@ -77,28 +77,34 @@ public class ProductServiceImpl implements ProductService {
     private Page<ListProductDto> mapperListProductToDto(Page<Product> products, Pageable pageable) {
         List<ListProductDto> listProductDtoList = new ArrayList<>();
 
-        for (Product product: products) {
-            CategoryProduct categoryProductById = categoryProductRepository
-                    .findById(product.getCategoryId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
+        if(products.getSize() != 0) {
+            for (Product product: products) {
+                CategoryProduct categoryProductById = categoryProductRepository
+                        .findById(product.getCategoryId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Data not found : " + product.getCategoryId()));
 
-            ListProductDto listProductDto = ListProductDto.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .categoryName(categoryProductById.getName())
-                    .build();
+                ListProductDto listProductDto = ListProductDto.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .categoryName(categoryProductById.getName())
+                        .build();
 
-            listProductDtoList.add(listProductDto);
+                listProductDtoList.add(listProductDto);
+            }
         }
 
         return new PageImpl<>(listProductDtoList, pageable, listProductDtoList.size());
     }
 
     private Product mapperDtoCreateProductToEntity(CreateProductDto createProductDto) {
-        Product product = mapperUtility
-                .modelMapperUtil()
-                .map(createProductDto, Product.class);
+        Product product = null;
+
+        if (createProductDto.getCategoryId() != null) {
+            product = mapperUtility
+                    .modelMapperUtil()
+                    .map(createProductDto, Product.class);
+        }
 
         CategoryProduct categoryProduct = categoryProductRepository
                 .findById(createProductDto.getCategoryId())

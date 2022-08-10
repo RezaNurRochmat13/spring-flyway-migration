@@ -2,13 +2,18 @@ package com.database.migration.service;
 
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.entity.Product;
-import com.database.migration.entity.dto.CreateProductDto;
+import com.database.migration.entity.dto.DetailProductDto;
+import com.database.migration.entity.dto.ListProductDto;
+import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -21,6 +26,9 @@ public class ProductServiceImplTest {
     @Mock
     ProductRepository productRepository;
 
+    @Mock
+    CategoryProductRepository categoryProductRepository;
+
     @InjectMocks
     ProductServiceImpl productService;
 
@@ -29,14 +37,26 @@ public class ProductServiceImplTest {
 
     @Test
     public void findAllProducts() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Product> productPage = mock(Page.class);
+
+        when(productRepository.findAll(pageable)).thenReturn(productPage);
+
+        Page<ListProductDto> listProductDtos = productService.findAllProducts(pageable);
+
+        assertThat(listProductDtos).isNotNull();
     }
 
     @Test
     public void findProductById() {
-    }
+        when(categoryProductRepository.findById(CATEGORY_1.getId())).thenReturn(Optional.of(CATEGORY_1));
+        when(productRepository.findById(PRODUCT_1.getId())).thenReturn(Optional.of(PRODUCT_1));
 
-    @Test
-    public void createNewProducts() {
+        DetailProductDto detailProductDtoExpected = productService
+                .findProductById(PRODUCT_1.getId());
+
+        assertThat(detailProductDtoExpected).isNotNull();
     }
 
     @Test
