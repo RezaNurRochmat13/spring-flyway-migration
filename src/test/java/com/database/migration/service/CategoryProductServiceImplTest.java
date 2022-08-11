@@ -1,5 +1,6 @@
 package com.database.migration.service;
 
+import com.database.migration.MigrationApplicationTests;
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.repository.CategoryProductRepository;
 import org.junit.jupiter.api.Test;

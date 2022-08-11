@@ -2,10 +2,13 @@ package com.database.migration.service;
 
 import com.database.migration.entity.CategoryProduct;
 import com.database.migration.entity.Product;
+import com.database.migration.entity.dto.CreateProductDto;
 import com.database.migration.entity.dto.DetailProductDto;
 import com.database.migration.entity.dto.ListProductDto;
 import com.database.migration.repository.CategoryProductRepository;
 import com.database.migration.repository.ProductRepository;
+import com.database.migration.util.ModelMapperUtility;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,8 +35,23 @@ public class ProductServiceImplTest {
     @InjectMocks
     ProductServiceImpl productService;
 
+    @Mock
+    private ModelMapperUtility modelMapperUtility;
+
     CategoryProduct CATEGORY_1 = new CategoryProduct(1L, "Sembako", "Sembako");
     Product PRODUCT_1 = new Product("Beras", "20000", 2, CATEGORY_1.getId());
+
+    private CreateProductDto createProductDto;
+
+    @Before
+    public void setUp() {
+        createProductDto = CreateProductDto.builder()
+                .name(PRODUCT_1.getName())
+                .price(PRODUCT_1.getPrice())
+                .qty(PRODUCT_1.getQty())
+                .categoryId(PRODUCT_1.getCategoryId())
+                .build();
+    }
 
     @Test
     public void findAllProducts() {
@@ -58,6 +76,16 @@ public class ProductServiceImplTest {
 
         assertThat(detailProductDtoExpected).isNotNull();
     }
+
+//    @Test
+//    public void createProduct() {
+//        when(productRepository.save(PRODUCT_1)).thenReturn(PRODUCT_1);
+//        when(modelMapperUtility.modelMapperUtil().map(createProductDto, Product.class));
+//
+//        Product productExpected = productService.createNewProducts(createProductDto);
+//
+//        assertThat(productExpected).isNotNull();
+//    }
 
     @Test
     public void updateProduct() {
